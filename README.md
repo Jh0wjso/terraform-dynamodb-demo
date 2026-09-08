@@ -1,28 +1,28 @@
 # terraform-dynamodb-demo
 
-Projeto Terraform de demonstração que provisiona uma tabela DynamoDB com um módulo reutilizável, além de uma IAM Role e Policy para acesso via EC2.
+A Terraform demo project that provisions a DynamoDB table using a reusable module, along with an IAM Role and Policy for EC2 access.
 
-## Estrutura
+## Structure
 
 ```
 .
-├── main.tf                          # Provider, módulo e recursos IAM
-├── outputs.tf                       # Outputs raiz
+├── main.tf                          # Provider, module and IAM resources
+├── outputs.tf                       # Root outputs
 └── modules/
-    ├── dynamodb_table/              # Módulo parametrizado (recomendado)
+    ├── dynamodb_table/              # Parameterized module (recommended)
     │   ├── main.tf
     │   ├── variables.tf
     │   └── outputs.tf
-    └── dynamodb_table_hardcoded/    # Módulo com valores fixos (referência)
+    └── dynamodb_table_hardcoded/    # Hardcoded values module (reference)
 ```
 
-## Pré-requisitos
+## Prerequisites
 
 - [Terraform](https://developer.hashicorp.com/terraform/downloads) >= 1.0
-- AWS CLI configurado com credenciais válidas
-- Permissões para criar recursos DynamoDB e IAM
+- AWS CLI configured with valid credentials
+- Permissions to create DynamoDB and IAM resources
 
-## Uso
+## Usage
 
 ```bash
 terraform init
@@ -30,40 +30,40 @@ terraform plan
 terraform apply
 ```
 
-## Recursos provisionados
+## Provisioned Resources
 
-| Recurso | Descrição |
+| Resource | Description |
 |---|---|
-| `aws_dynamodb_table` | Tabela `users-dev` com billing `PAY_PER_REQUEST` e hash key `id` |
-| `aws_iam_role` | Role assumível por EC2 para acesso à tabela |
-| `aws_iam_policy` | Policy com permissões de leitura e escrita no DynamoDB |
-| `aws_iam_role_policy_attachment` | Vincula a policy à role |
+| `aws_dynamodb_table` | `users-dev` table with `PAY_PER_REQUEST` billing and `id` hash key |
+| `aws_iam_role` | Role assumable by EC2 to access the table |
+| `aws_iam_policy` | Policy with read and write permissions on DynamoDB |
+| `aws_iam_role_policy_attachment` | Attaches the policy to the role |
 
-## Módulo `dynamodb_table`
+## `dynamodb_table` Module
 
 ### Inputs
 
-| Nome | Descrição | Tipo | Obrigatório |
+| Name | Description | Type | Required |
 |---|---|---|---|
-| `table_name` | Nome base da tabela | `string` | sim |
-| `environment` | Ambiente (ex: dev, staging, prod) | `string` | sim |
+| `table_name` | Base name of the table | `string` | yes |
+| `environment` | Environment name (e.g., dev, staging, prod) | `string` | yes |
 
 ### Outputs
 
-| Nome | Descrição |
+| Name | Description |
 |---|---|
-| `table_name` | Nome completo da tabela (`<table_name>-<environment>`) |
-| `table_arn` | ARN da tabela DynamoDB |
+| `table_name` | Full table name (`<table_name>-<environment>`) |
+| `table_arn` | DynamoDB table ARN |
 
-## Outputs raiz
+## Root Outputs
 
-| Nome | Descrição |
+| Name | Description |
 |---|---|
-| `table_name` | Nome completo da tabela |
-| `table_arn` | ARN da tabela |
-| `ec2_iam_role_arn` | ARN da IAM Role para EC2 |
+| `table_name` | Full table name |
+| `table_arn` | Table ARN |
+| `ec2_iam_role_arn` | IAM Role ARN for EC2 |
 
-## Destruir recursos
+## Destroy Resources
 
 ```bash
 terraform destroy
