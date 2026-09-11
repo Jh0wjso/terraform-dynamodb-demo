@@ -1,13 +1,26 @@
 provider "aws" {
-  region = "us-west-2"
+  region = var.aws_region
 }
 
 module "dynamodb_table" {
   #source = "./modules/dynamodb_table_hardcoded"
   source = "./modules/dynamodb_table"
 
-  table_name  = "users"
-  environment = "dev"
+  table_name  = var.table_name
+  environment = var.environment
+}
+
+module "lambda_function" {
+  source = "./modules/lambda_function"
+
+  function_name = "${var.environment}-${var.table_name}-lambda"
+  handler       = "index.handler"
+  runtime       = "python3.8"
+  table_arn     = module.dynamodb_table.table_arn
+
+  environment_variables = {
+    TABLE_NAME = module.dynamodb_table.table_name
+  }
 }
 
 # IAM Role, Policy, and Role Policy Attachment
@@ -49,6 +62,7 @@ resource "aws_iam_policy" "dynamodb_access_policy" {
     ]
   })
 }
+
 
 resource "aws_iam_role_policy_attachment" "attach" {
   role       = aws_iam_role.dynamodb_access_role.name
