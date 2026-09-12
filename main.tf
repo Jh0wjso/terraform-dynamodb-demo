@@ -15,7 +15,20 @@ module "lambda_function" {
 
   function_name = "${var.environment}-${var.table_name}-lambda"
   handler       = "index.handler"
-  runtime       = "python3.8"
+  runtime       = "python3.12"
+  table_arn     = module.dynamodb_table.table_arn
+
+  environment_variables = {
+    TABLE_NAME = module.dynamodb_table.table_name
+  }
+}
+
+module "lambda_get_items" {
+  source = "./modules/lambda_function"
+
+  function_name = "${var.environment}-${var.table_name}-get-items-lambda"
+  handler       = "index.handler"
+  runtime       = "python3.12"
   table_arn     = module.dynamodb_table.table_arn
 
   environment_variables = {

@@ -25,7 +25,7 @@ resource "aws_iam_role_policy" "lambda_dynamodb" {
     Statement = [
       {
         Effect   = "Allow"
-        Action   = ["dynamodb:PutItem"]
+        Action   = ["dynamodb:PutItem", "dynamodb:GetItem", "dynamodb:Scan"],
         Resource = var.table_arn
       },
       {
